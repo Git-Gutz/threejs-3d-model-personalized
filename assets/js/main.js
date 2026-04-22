@@ -14,12 +14,12 @@ let activeAction, previousAction;
 // IMPORTANTE: Para GitHub Pages, asegúrate de que mayúsculas y minúsculas
 // coincidan EXACTAMENTE con los archivos de tu carpeta fbx.
 const animFiles = [
-    { name: 'Idle', url: './assets/models/fbx/idle.fbx' },
+    { name: 'Idle', url: './assets/models/fbx/Idle.fbx' },
     { name: 'Turn', url: './assets/models/fbx/Drunk.fbx' },
-    { name: 'Dodge', url: './assets/models/fbx/dodge.fbx' },
-    { name: 'Run', url: './assets/models/fbx/run.fbx' },
-    { name: 'Jump', url: './assets/models/fbx/jump.fbx' },
-    { name: 'Attack', url: './assets/models/fbx/attack.fbx' }
+    { name: 'Dodge', url: './assets/models/fbx/Dodge.fbx' },
+    { name: 'Run', url: './assets/models/fbx/Run.fbx' },
+    { name: 'Jump', url: './assets/models/fbx/Jump.fbx' },
+    { name: 'Attack', url: './assets/models/fbx/Attack.fbx' }
 ];
 
 const timer = new THREE.Timer();
