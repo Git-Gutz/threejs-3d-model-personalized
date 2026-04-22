@@ -1,117 +1,189 @@
+:root {
+    --bonfire-glow: #e86424; /* Naranja ascuas */
+    --bonfire-dim: #8c350d;
+    --text-main: #d1c9be; /* Pergamino gastado */
+    --text-muted: #6b6b6b;
+    --metal-dark: #121212;
+}
+
 body {
     margin: 0;
-    background-color: #0a0a0a; /* Fondo más profundo para la atmósfera oscura */
-    color: #fff;
-    font-family: Monospace;
-    font-size: 13px;
-    line-height: 24px;
-    overscroll-behavior: none;
-    overflow: hidden; /* Evita que aparezcan barras de scroll por el canvas */
-}
-
-#canvas-container {
-    width: 100vw;
-    height: calc(100vh - 112px); /* Altura dinámica restando el navbar y footer */
-    display: block;
-    position: relative;
-}
-
-a {
-    color: #00ffcc; /* Un tono un poco más moderno que el amarillo puro */
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-    color: #fff;
-}
-
-button {
-    cursor: pointer;
-    text-transform: uppercase;
-}
-
-#info {
-    position: absolute;
-    top: 70px; /* Separado del navbar */
-    left: 20px; /* Alineado a la izquierda para estilo HUD */
-    width: auto;
-    padding: 15px;
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid #333;
-    border-radius: 8px;
-    box-sizing: border-box;
-    text-align: center;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+    background-color: #000;
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
     user-select: none;
-    pointer-events: none;
-    z-index: 1;
 }
 
-a, button, input, select {
+/* El Canvas es la base absoluta */
+#canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+}
+
+/* Capa de Interfaz (Bloquea clicks accidentales al canvas donde hay UI) */
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    pointer-events: none; /* Permite rotar la cámara a través de la UI vacía */
+}
+
+/* -----------------------------------
+   HEADER: Elegante y Centrado
+------------------------------------ */
+#header-hud {
+    position: absolute;
+    top: 40px;
+    width: 100%;
+    text-align: center;
     pointer-events: auto;
 }
 
-.lil-gui {
-    z-index: 2 !important;
+.shrine-title {
+    font-family: 'Cinzel', serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--bonfire-glow);
+    text-shadow: 0 0 15px rgba(232, 100, 36, 0.4);
+    margin: 0;
+    letter-spacing: 4px;
+    text-transform: uppercase;
 }
 
-@media all and ( max-width: 640px ) {
-    .lil-gui.root { 
-        right: auto;
-        top: auto;
-        max-height: 50%;
-        max-width: 80%;
-        bottom: 0;
-        left: 0;
-    }
-    #info {
-        top: 60px;
-        left: 10px;
-        padding: 10px;
-    }
+.shrine-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin: 0;
 }
 
-#overlay {
+.shrine-divider-center {
+    height: 1px;
+    width: 300px;
+    margin: 8px auto;
+    background: linear-gradient(90deg, transparent, var(--bonfire-dim), transparent);
+}
+
+/* -----------------------------------
+   PANEL LATERAL: Fundido en la Oscuridad
+------------------------------------ */
+#controls-hud {
     position: absolute;
-    font-size: 16px;
-    z-index: 2;
-    top: 0;
+    top: 50%;
     left: 0;
-    width: 100%;
-    height: 100%;
+    transform: translateY(-50%);
+    /* El gradiente simula que la UI nace de las sombras del borde izquierdo */
+    background: linear-gradient(90deg, rgba(10,10,12,0.95) 0%, rgba(10,10,12,0.6) 40%, transparent 100%);
+    padding: 40px 80px 40px 40px;
+    pointer-events: auto;
+}
+
+.engine-credits {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.engine-credits a {
+    color: var(--text-main);
+    text-decoration: none;
+    border-bottom: 1px solid var(--text-muted);
+    transition: color 0.3s, border-color 0.3s;
+}
+
+.engine-credits a:hover {
+    color: var(--bonfire-glow);
+    border-color: var(--bonfire-glow);
+}
+
+.controls-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--bonfire-dim);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    border-left: 2px solid var(--bonfire-glow);
+    padding-left: 10px;
+}
+
+/* -----------------------------------
+   LISTA DE TECLAS Y BOTONES
+------------------------------------ */
+.action-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.action-list li {
+    margin-bottom: 15px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    background: rgba(0,0,0,0.85); /* Fondo overlay un poco más denso */
+    font-size: 0.9rem;
+    letter-spacing: 1px;
 }
 
-#overlay button {
-    background: transparent;
-    border: 0;
-    border: 1px solid rgb(255, 255, 255);
-    border-radius: 4px;
-    color: #ffffff;
-    padding: 12px 18px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.3s, color 0.3s;
-}
-
-#overlay button:hover {
-    background: #ffffff;
-    color: #000000;
-}
-
-#notSupported {
-    width: 50%;
-    margin: auto;
-    background-color: #8b0000; /* Rojo oscuro */
-    margin-top: 20px;
-    padding: 10px;
-    border-radius: 5px;
+/* Diseño de placa de metal para las teclas */
+.key-cap {
+    display: inline-block;
+    background: linear-gradient(180deg, #1e1e1e 0%, #0a0a0a 100%);
+    color: var(--bonfire-glow);
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 0.85rem;
     text-align: center;
+    padding: 6px 0;
+    min-width: 32px;
+    border-radius: 2px;
+    border: 1px solid #333;
+    border-bottom: 2px solid #000;
+    margin-right: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+    text-shadow: 0 0 5px rgba(232, 100, 36, 0.3);
+}
+
+.dual-cap { min-width: 45px; padding: 6px 10px; }
+.wide-cap { min-width: 70px; padding: 6px 15px; font-size: 0.75rem; letter-spacing: 2px; }
+
+.mt-space { margin-top: 30px; }
+
+.cancel-action {
+    color: #8c350d;
+}
+
+.danger-cap {
+    color: #ff4444;
+    text-shadow: 0 0 5px rgba(255, 68, 68, 0.4);
+    border-color: #4a1515;
+    background: linear-gradient(180deg, #2a0b0b 0%, #120202 100%);
+}
+
+/* -----------------------------------
+   FOOTER: Discreto y Elegante
+------------------------------------ */
+#footer-hud {
+    position: absolute;
+    bottom: 25px;
+    right: 40px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    pointer-events: auto;
+}
+
+.dot-separator {
+    color: var(--bonfire-glow);
+    margin: 0 10px;
 }
