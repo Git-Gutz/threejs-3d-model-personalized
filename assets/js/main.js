@@ -11,10 +11,11 @@ let mixer;
 const actions = {};
 let activeAction, previousAction;
 
-// IMPORTANTE: Asegúrate de que estos nombres de archivo coincidan con los tuyos
+// IMPORTANTE: Para GitHub Pages, asegúrate de que mayúsculas y minúsculas
+// coincidan EXACTAMENTE con los archivos de tu carpeta fbx.
 const animFiles = [
     { name: 'Idle', url: './assets/models/fbx/idle.fbx' },
-    { name: 'Turn', url: './assets/models/fbx/drunk.fbx' },
+    { name: 'Turn', url: './assets/models/fbx/Drunk.fbx' },
     { name: 'Dodge', url: './assets/models/fbx/dodge.fbx' },
     { name: 'Run', url: './assets/models/fbx/run.fbx' },
     { name: 'Jump', url: './assets/models/fbx/jump.fbx' },
@@ -29,30 +30,28 @@ init();
 function init() {
     const container = document.getElementById('canvas-container');
 
-    // 1. Configuración de Cámara (Ángulo RPG)
+    // 1. Configuración de Cámara (Ángulo RPG cinemático)
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
-    camera.position.set(80, 120, 220); // Un poco más cerca para sentir la atmósfera
+    camera.position.set(80, 120, 220); 
 
-    // 2. Escena Estilo "Firelink" (Todo con colores base)
+    // 2. Escena Estilo "Firelink"
     scene = new THREE.Scene();
     
-    // Color de fondo: Un gris/verde musgo muy, muy oscuro y desaturado
+    // Color de fondo: Verde musgo/gris muy oscuro
     const atmosphereColor = new THREE.Color(0x111613); 
     scene.background = atmosphereColor;
     
-    // Niebla: Usamos FogExp2 (Exponencial) para un difuminado mucho más realista y tétrico
+    // Niebla Exponencial: Ligera pero profunda para difuminar el horizonte
     scene.fog = new THREE.FogExp2(atmosphereColor, 0.0015);
 
-    // 3. Sistema de Iluminación Dual (El secreto de la atmósfera)
-    
-    // Luz Hemisférica: Simula la luz de la luna filtrándose entre árboles/ruinas invisibles
-    // Arriba: Azul pálido frío. Abajo: Negro/Verde oscuro.
+    // 3. Sistema de Iluminación Dual
+    // Luz Hemisférica: Simula luz de luna fría filtrándose desde el cielo oscuro
     const hemiLight = new THREE.HemisphereLight(0x445566, 0x050a05, 0.6);
     hemiLight.position.set(0, 200, 0);
     scene.add(hemiLight);
 
-    // Luz Direccional Principal (Luz de luna dura para las sombras)
-    const dirLight = new THREE.DirectionalLight(0x556677, 1.0);
+    // Luz Direccional Principal (Luz de luna dura para proyectar sombras)
+    const dirLight = new THREE.DirectionalLight(0x778899, 1.5);
     dirLight.position.set(-100, 200, -100);
     dirLight.castShadow = true;
     dirLight.shadow.camera.top = 150;
@@ -62,19 +61,18 @@ function init() {
     dirLight.shadow.bias = -0.001; // Evita artefactos visuales en el modelo
     scene.add(dirLight);
 
-    // NUEVO: Luz de Hoguera (Puntual, cálida y cercana al suelo)
-    // Esto baña un lado del caballero de color naranja brasa
-    const bonfireLight = new THREE.PointLight(0xe86424, 20000, 400);
-    bonfireLight.position.set(50, 30, 50); // Posicionada a la derecha y adelante
+    // Luz de Hoguera (Puntual, cálida, de alta intensidad)
+    const bonfireLight = new THREE.PointLight(0xe86424, 50000, 800);
+    bonfireLight.position.set(50, 30, 50); 
     scene.add(bonfireLight);
 
     // 4. Suelo Procedural (Piedra Musgosa)
     const mesh = new THREE.Mesh(
         new THREE.PlaneGeometry(2000, 2000), 
-        // Usamos StandardMaterial para que reaccione mejor a la luz puntual de la "hoguera"
+        // StandardMaterial reacciona excelente a la luz puntual de la hoguera
         new THREE.MeshStandardMaterial({ 
-            color: 0x1f2620, // Gris piedra con un ligero toque verde oscuro
-            roughness: 0.9,  // Muy rugoso, nada brillante
+            color: 0x2a3b2b, // Piedra con un notorio tinte verdoso oscuro
+            roughness: 0.9,  // Rugoso para emular piedra
             metalness: 0.1,
             depthWrite: false 
         })
@@ -83,7 +81,7 @@ function init() {
     mesh.receiveShadow = true;
     scene.add(mesh);
 
-    // Cuadrícula táctica en negro con mucha transparencia para que parezcan marcas de baldosas oscuras
+    // Cuadrícula táctica en negro con mucha transparencia
     const grid = new THREE.GridHelper(2000, 50, 0x000000, 0x000000);
     grid.material.opacity = 0.15;
     grid.material.transparent = true;
@@ -96,27 +94,29 @@ function init() {
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setAnimationLoop(animate);
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Sombras más suaves y realistas
+    renderer.shadowMap.type = THREE.PCFShadowMap; // Sintaxis actualizada sin advertencias
     container.appendChild(renderer.domElement);
 
+    // Controles orbitales
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.target.set(0, 80, 0); // Mirar un poco más al pecho del personaje
-    controls.maxPolarAngle = Math.PI / 2 - 0.02; // No dejar que la cámara baje del suelo
-    controls.maxDistance = 500; // No dejar que la cámara se aleje más allá de la niebla
+    controls.target.set(0, 80, 0); 
+    controls.maxPolarAngle = Math.PI / 2 - 0.02; // No permite ver debajo del suelo
+    controls.maxDistance = 500; // Mantiene la cámara dentro de la niebla visible
     controls.update();
 
     stats = new Stats();
-    // container.appendChild(stats.dom); // Descomenta si quieres ver los FPS
+    // container.appendChild(stats.dom); // Descomenta para ver los FPS
 
     window.addEventListener('resize', onWindowResize);
     
-    // 6. Cargar Todo
+    // 6. Cargar Modelo y Animaciones
     loadCharacterAndAnimations();
 }
 
 function loadCharacterAndAnimations() {
     const loader = new FBXLoader(manager);
 
+    // IMPORTANTE: Asegúrate de que el nombre del archivo base coincide
     loader.load('./assets/models/fbx/Character.fbx', function (object) {
         character = object;
         mixer = new THREE.AnimationMixer(character);
@@ -125,7 +125,8 @@ function loadCharacterAndAnimations() {
             if (child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
-                // Reducir el brillo a cero para que parezca metal/cuero gastado antiguo
+                
+                // Reducir el brillo a cero para aspecto de metal/cuero gastado
                 if(child.material) {
                     if (Array.isArray(child.material)) {
                         child.material.forEach(mat => mat.shininess = 0);
@@ -175,17 +176,18 @@ function fadeToAction(name, duration) {
 }
 
 function setupKeyControls() {
+    // Tiempos de crossfade hiper rápidos (0.05s y 0.02s) para sensación táctica instantánea
     document.addEventListener('keydown', (event) => {
         if (!activeAction) return;
 
         switch(event.code) {
-            case 'KeyW': fadeToAction('Run', 0.2); break;
-            case 'KeyS': fadeToAction('Dodge', 0.2); break;
+            case 'KeyW': fadeToAction('Run', 0.05); break;
+            case 'KeyS': fadeToAction('Dodge', 0.05); break;
             case 'KeyA': 
-            case 'KeyD': fadeToAction('Turn', 0.2); break;
-            case 'Space': fadeToAction('Jump', 0.2); break;
-            case 'KeyE': fadeToAction('Attack', 0.1); break;
-            case 'KeyX': fadeToAction('Idle', 0.3); break;
+            case 'KeyD': fadeToAction('Turn', 0.05); break;
+            case 'Space': fadeToAction('Jump', 0.02); break;
+            case 'KeyE': fadeToAction('Attack', 0.02); break;
+            case 'KeyX': fadeToAction('Idle', 0.2); break; // Transición suave al descanso
         }
     });
 }
