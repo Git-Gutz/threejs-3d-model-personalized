@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Control de Personaje | Three.js</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="shortcut icon" href="./assets/img/favicon.png" type="image/x-icon">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link type="text/css" rel="stylesheet" href="./assets/css/main.css">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <nav class="navbar navbar-dark border-bottom border-secondary" style="background-color: #111;">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1" style="font-family: Monospace;">Visor de Movimientos Tácticos</span>
+        </div>
+    </nav>
+
+    <div id="info">
+        <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - FBX Loader<br />
+        Animaciones de <a href="https://www.mixamo.com/" target="_blank" rel="noopener">Mixamo</a>
+        <hr class="border-secondary my-2" style="opacity: 0.5;">
+       <ul class="list-unstyled mb-0 text-start d-inline-block">
+    <li><kbd class="bg-secondary">W</kbd> Run</li>
+    <li><kbd class="bg-secondary">S</kbd> Dodge</li>
+    <li><kbd class="bg-secondary">A</kbd> </kbd> Drunk</li>
+    <li><kbd class="bg-secondary">Space</kbd> Jump Up</li>
+    <li><kbd class="bg-secondary">E</kbd> Attack</li>
+    <li><kbd class="bg-danger">X</kbd> Cancel / Idle</li> 
+</ul>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <footer class="text-center py-3 mt-auto border-top border-secondary" style="background-color: #111;">
+        <div class="container">
+            <small class="text-muted" style="font-family: Monospace;">
+                Desarrollado por Git-Gutz | Ingeniería en Sistemas Computacionales
+            </small>
+        </div>
+    </footer>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "./assets/build/three.module.js",
+                "three/addons/": "./assets/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module" src="./assets/js/main.js"></script>
+
+</body>
+</html>

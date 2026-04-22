@@ -1,0 +1,117 @@
+body {
+    margin: 0;
+    background-color: #0a0a0a; /* Fondo más profundo para la atmósfera oscura */
+    color: #fff;
+    font-family: Monospace;
+    font-size: 13px;
+    line-height: 24px;
+    overscroll-behavior: none;
+    overflow: hidden; /* Evita que aparezcan barras de scroll por el canvas */
+}
+
+#canvas-container {
+    width: 100vw;
+    height: calc(100vh - 112px); /* Altura dinámica restando el navbar y footer */
+    display: block;
+    position: relative;
+}
+
+a {
+    color: #00ffcc; /* Un tono un poco más moderno que el amarillo puro */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #fff;
+}
+
+button {
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+#info {
+    position: absolute;
+    top: 70px; /* Separado del navbar */
+    left: 20px; /* Alineado a la izquierda para estilo HUD */
+    width: auto;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #333;
+    border-radius: 8px;
+    box-sizing: border-box;
+    text-align: center;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+    z-index: 1;
+}
+
+a, button, input, select {
+    pointer-events: auto;
+}
+
+.lil-gui {
+    z-index: 2 !important;
+}
+
+@media all and ( max-width: 640px ) {
+    .lil-gui.root { 
+        right: auto;
+        top: auto;
+        max-height: 50%;
+        max-width: 80%;
+        bottom: 0;
+        left: 0;
+    }
+    #info {
+        top: 60px;
+        left: 10px;
+        padding: 10px;
+    }
+}
+
+#overlay {
+    position: absolute;
+    font-size: 16px;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: rgba(0,0,0,0.85); /* Fondo overlay un poco más denso */
+}
+
+#overlay button {
+    background: transparent;
+    border: 0;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 4px;
+    color: #ffffff;
+    padding: 12px 18px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+}
+
+#overlay button:hover {
+    background: #ffffff;
+    color: #000000;
+}
+
+#notSupported {
+    width: 50%;
+    margin: auto;
+    background-color: #8b0000; /* Rojo oscuro */
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
